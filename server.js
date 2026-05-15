@@ -1,11 +1,11 @@
-require("dotenv").config();
-
 const express = require("express");
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 const cors = require("cors");
 
-const connectDB = require("./config/db");
+dotenv.config();
 
-const errorHandler = require("./utils/errorHandler");
+const connectDB = require("./config/db");
 
 const userRoutes = require("./routes/userRoutes");
 const doctorRoutes = require("./routes/doctorRoutes");
@@ -16,20 +16,15 @@ const app = express();
 connectDB();
 
 app.use(express.json());
-
 app.use(cors());
 
 app.use("/api/users", userRoutes);
-
 app.use("/api/doctors", doctorRoutes);
-
 app.use("/api/appointments", appointmentRoutes);
 
 app.get("/", (req, res) => {
-  res.send("API Running");
+  res.send("API Running...");
 });
-
-app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 

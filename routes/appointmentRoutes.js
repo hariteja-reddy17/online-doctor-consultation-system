@@ -9,26 +9,12 @@ const {
   rejectAppointment,
 } = require("../controllers/appointmentController");
 
-const authMiddleware = require("../middleware/authMiddleware");
-
-const roleMiddleware = require("../middleware/roleMiddleware");
-
-router.post("/book", bookAppointment);
+router.post("/", bookAppointment);
 
 router.get("/", getAppointments);
 
-router.put(
-  "/approve/:id",
-  authMiddleware,
-  roleMiddleware("doctor", "admin"),
-  approveAppointment,
-);
+router.put("/approve/:id", approveAppointment);
 
-router.put(
-  "/reject/:id",
-  authMiddleware,
-  roleMiddleware("doctor", "admin"),
-  rejectAppointment,
-);
+router.put("/reject/:id", rejectAppointment);
 
 module.exports = router;

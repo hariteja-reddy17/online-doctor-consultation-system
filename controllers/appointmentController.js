@@ -2,7 +2,14 @@ const Appointment = require("../models/Appointment");
 
 const bookAppointment = async (req, res) => {
   try {
-    const appointment = new Appointment(req.body);
+    const { patientName, doctorName, date } = req.body;
+
+    const appointment = new Appointment({
+      patientName,
+      doctorName,
+      date,
+      status: "pending",
+    });
 
     await appointment.save();
 
@@ -19,11 +26,9 @@ const bookAppointment = async (req, res) => {
 
 const getAppointments = async (req, res) => {
   try {
-    const appointments = await Appointment.find()
-      .populate("patientId")
-      .populate("doctorId");
+    const appointments = await Appointment.find();
 
-    res.status(200).json(appointments);
+    res.json(appointments);
   } catch (error) {
     res.status(500).json({
       message: error.message,
@@ -33,17 +38,12 @@ const getAppointments = async (req, res) => {
 
 const approveAppointment = async (req, res) => {
   try {
-    const appointment = await Appointment.findByIdAndUpdate(
-      req.params.id,
+    await Appointment.findByIdAndUpdate(req.params.id, {
+      status: "approved",
+    });
 
-      { status: "approved" },
-
-      { new: true },
-    );
-
-    res.status(200).json({
+    res.json({
       message: "Appointment approved",
-      appointment,
     });
   } catch (error) {
     res.status(500).json({
@@ -54,16 +54,12 @@ const approveAppointment = async (req, res) => {
 
 const rejectAppointment = async (req, res) => {
   try {
-    const appointment = await Appointment.findByIdAndUpdate(
-      req.params.id,
+    await Appointment.findByIdAndUpdate(req.params.id, {
+      status: "rejected",
+    });
 
-      { status: "rejected" },
-
-      { new: true },
-    );
-
-    res.status(200).json({
-      message: error.message,
+    res.json({
+      message: "Appointment rejected",
     });
   } catch (error) {
     res.status(500).json({
